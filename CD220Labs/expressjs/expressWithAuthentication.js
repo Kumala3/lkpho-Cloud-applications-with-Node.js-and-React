@@ -4,7 +4,7 @@ const session = require("express-session");
 
 let users = [];
 
-//Function to check if the user exists
+// Function to check if the user exists
 const doesExist = username => {
     let userswithsamename = users.filter(user => {
         return user.username === username;
@@ -16,7 +16,7 @@ const doesExist = username => {
     }
 };
 
-//Function to check if the user is authenticated
+// Function to check if the user is authenticated
 const authenticatedUser = (username, password) => {
     let validusers = users.filter(user => {
         return user.username === username && user.password === password;
@@ -36,10 +36,10 @@ app.use(session({ secret: "fingerpint" }));
 
 app.use("/auth", function auth(req, res, next) {
     if (req.session.authorization) {
-        //get the authorization object stored in the session
+        // Get the authorization object stored in the session
         token = req.session.authorization["accessToken"]; //retrieve the token from authorization object
         jwt.verify(token, "access", (err, user) => {
-            //Use JWT to verify token
+            // Use JWT to verify token
             if (!err) {
                 req.user = user;
                 next();
@@ -90,11 +90,9 @@ app.post("/register", (req, res) => {
     if (username && password) {
         if (!doesExist(username)) {
             users.push({ username: username, password: password });
-            return res
-                .status(200)
-                .json({
-                    message: "User successfully registred. Now you can login",
-                });
+            return res.status(200).json({
+                message: "User successfully registred. Now you can login",
+            });
         } else {
             return res.status(404).json({ message: "User already exists!" });
         }
@@ -103,11 +101,9 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/auth/get_message", (req, res) => {
-    return res
-        .status(200)
-        .json({
-            message: "Hello, You are an authenticated user. Congratulations!",
-        });
+    return res.status(200).json({
+        message: "Hello, You are an authenticated user. Congratulations!",
+    });
 });
 
 const PORT = 5000;
